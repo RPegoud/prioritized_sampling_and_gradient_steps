@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Sequence
 
 import distrax
@@ -163,8 +164,9 @@ def make_train(arg):
                     # gae is computed backwards as the advantage at time t
                     # depends on the estimated advantages of future timesteps
                     reverse=True,
-                    # unrolls the loop body of the scan operation 16 iterations at a time
-                    # enables the 128 steps (default value) to be completed in 8 iterations
+                    # unrolls the loop body of the scan operation 16 iterations
+                    # at a time,  enables the 128 steps (default value) to
+                    # be completed in 8 iterations
                     unroll=16,
                 )
                 return advantages, advantages + traj_batch.value
@@ -323,4 +325,10 @@ if __name__ == "__main__":
     )
     returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
     print(returns.shape)
-    # pd.DataFrame(returns).to_csv(f"../../logs/{env_name}_parallel_ppo1.csv")
+    if args.log_results:
+        path = f"logs/{args.env_name}_parallel_ppo1.csv"
+        print("logging results ...")
+        Path("logs").mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(returns).to_csv(path)
+        print("done !")
+    

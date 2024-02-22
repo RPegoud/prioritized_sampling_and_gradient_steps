@@ -1,8 +1,3 @@
-# ----- CREDITS: Chris Lu @ PureJaxRL -----
-# https://github.com/luchris429/purejaxrl/blob/main/purejaxrl/ppo.py
-
-
-from pathlib import Path
 from typing import Sequence
 
 import distrax
@@ -168,8 +163,9 @@ def make_train(arg):
                     # gae is computed backwards as the advantage at time t
                     # depends on the estimated advantages of future timesteps
                     reverse=True,
-                    # unrolls the loop body of the scan operation 16 iterations at a time
-                    # enables the 128 steps (default value) to be completed in 8 iterations
+                    # unrolls the loop body of the scan operation 16 iterations
+                    # at a time,  enables the 128 steps (default value) to
+                    # be completed in 8 iterations
                     unroll=16,
                 )
                 return advantages, advantages + traj_batch.value
@@ -193,13 +189,12 @@ def make_train(arg):
                         ).clip(-args.clip_eps, args.clip_eps)
                         value_losses = jnp.square(value - targets)
                         value_losses_clipped = jnp.square(value_pred_clipped - targets)
-                        value_loss = (
-                            0.5 * jnp.maximum(value_losses, value_losses_clipped).mean()
+                        value_loss = 0.5 * jnp.maximum(
+                            value_losses, value_losses_clipped
                         )
 
                         # CALCULATE ACTOR LOSS
                         ratio = jnp.exp(log_prob - traj_batch.log_prob)
-                        gae = (gae - gae.mean()) / (gae.std() + 1e-8)
                         loss_actor1 = ratio * gae
                         loss_actor2 = (
                             jnp.clip(
@@ -210,8 +205,7 @@ def make_train(arg):
                             * gae
                         )
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
-                        loss_actor = loss_actor.mean()
-                        entropy = pi.entropy().mean()
+                        entropy = pi.entropy()
 
                         total_loss = (
                             loss_actor
@@ -220,11 +214,56 @@ def make_train(arg):
                         )
                         return total_loss, (value_loss, loss_actor, entropy)
 
+                    def get_per_sample_norms(grads: dict):
+                        """
+                        Computes the normalized L2-norm of the per-sample gradient.
+                        """
+
+                        def _single_sample_norm(grads, idx):
+                            """
+                            For a single sample, computes the L2-norm of all the gradient components.
+                            """
+                            sum_of_squares = jnp.array(
+                                jax.tree_flatten(
+                                    jax.tree_map(lambda g: jnp.sum(g[idx] ** 2), grads),
+                                )[0]
+                            ).sum()
+
+                            return jnp.sqrt(sum_of_squares)
+
+                        sample_norms = jax.vmap(_single_sample_norm, in_axes=(None, 0))(
+                            grads,
+                            jnp.arange(args.num_steps * args.num_minibatches),
+                        )
+                        return sample_norms
+
+                    def get_weighted_grads(grads, weights):
+                        """Divides the per-sample gradients by the norm ratio."""
+
+                        def _single_sample_broadcast(idx):
+                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+
+                        per_sample_grads = jax.vmap(_single_sample_broadcast)(
+                            jnp.arange(args.num_steps * args.num_minibatches)
+                        )
+                        return jax.tree_map(lambda x: x.mean(axis=0), per_sample_grads)
+
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
-                    total_loss, grads = grad_fn(
-                        train_state.params, traj_batch, advantages, targets
+                    total_loss, per_sample_grads = jax.vmap(
+                        grad_fn, in_axes=(None, 0, 0, 0)
+                    )(
+                        train_state.params,
+                        traj_batch,
+                        advantages,
+                        targets,
                     )
-                    train_state = train_state.apply_gradients(grads=grads)
+
+                    per_sample_norms = get_per_sample_norms(per_sample_grads)
+                    weighted_grads = get_weighted_grads(
+                        per_sample_grads, per_sample_norms
+                    )
+
+                    train_state = train_state.apply_gradients(grads=weighted_grads)
                     return train_state, total_loss
 
                 train_state, traj_batch, advantages, targets, rng = update_state
@@ -297,9 +336,6 @@ def make_train(arg):
 if __name__ == "__main__":
 
     args = tyro.cli(PPO_Args)
-    print(
-        f"Running {args.model_name} on {args.env_name} for {args.total_timesteps} steps..."
-    )
     rng = jax.random.PRNGKey(args.seed)
     rngs = jax.random.split(rng, args.n_agents)
     train_vjit = jax.jit(jax.vmap(make_train(args)))
@@ -312,9 +348,4 @@ if __name__ == "__main__":
     )
     returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
     print(returns.shape)
-    if args.log_results:
-        path = f"logs/{args.env_name}_base_ppo.csv"
-        print("logging results ...")
-        Path("logs").mkdir(parents=True, exist_ok=True)
-        pd.DataFrame(returns).to_csv(path)
-        print("done !")
+    # pd.DataFrame(returns).to_csv(f"../logs/{env_name}_parallel_ppo1a.csv")

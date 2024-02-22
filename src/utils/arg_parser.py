@@ -14,6 +14,8 @@ class PPO_Args:
     """experiment seed"""
     save_model: bool = False
     """whether to save model into the `runs/{run_name}` folder"""
+    log_results: bool = False
+    """whether to save results in the logs folder"""
 
     # Algorithm specific arguments
     env_name: str = "CartPole-v1"
@@ -43,6 +45,8 @@ class PPO_Args:
     """value function coefficient"""
     max_grad_norm: float = 0.5
     """upper bound on the gradient norm"""
+    alpha: float = 0.2
+    """the alpha coefficient used in PPO1.c&d"""
     activation: str = "tanh"
     """the activation function used by the actor and critic networks"""
     anneal_lr: bool = True
