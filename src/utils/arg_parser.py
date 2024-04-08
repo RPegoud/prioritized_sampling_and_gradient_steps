@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass
 
 import tyro
@@ -8,14 +7,19 @@ import tyro
 class PPO_Args:
     model_name: str
     """name of the selected model"""
-    exp_name: str = os.path.basename(__file__)[: -len(".py")]
-    """experiment name"""
     seed: int = 0
     """experiment seed"""
     save_model: bool = False
     """whether to save model into the `runs/{run_name}` folder"""
     log_results: bool = False
     """whether to save results in the logs folder"""
+
+    wandb_project_name: str = "improved-gradient-steps"
+    """the wandb project name"""
+    wandb_entity: str = "rpegoud"
+    """the entity (team) of wandb's project"""
+    logging_dir: str = "."  # "$HOME/wandb"
+    """the base directory for logging and wandb storage."""
 
     # Algorithm specific arguments
     env_name: str = "CartPole-v1"
