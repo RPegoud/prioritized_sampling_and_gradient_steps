@@ -5,8 +5,6 @@ import tyro
 
 @dataclass
 class PPO_Args:
-    model_name: str
-    """name of the selected model"""
     seed: int = 0
     """experiment seed"""
     save_model: bool = False

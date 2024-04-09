@@ -1,5 +1,6 @@
 # ----- CREDITS: Chris Lu @ PureJaxRL -----
 # https://github.com/luchris429/purejaxrl/blob/main/purejaxrl/ppo.py
+import datetime
 import os
 import time
 from typing import Sequence
@@ -13,14 +14,14 @@ import numpy as np
 import optax
 import pandas as pd
 import plotly
-import plotly.express as px
+import plotly.graph_objects as go
 import tyro
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import FlattenObservationWrapper, LogWrapper
-from utils import PPO_Args, Transition
 
 import wandb
+from utils import PPO_Args, Transition
 
 
 class ActorCritic(nn.Module):
@@ -297,11 +298,14 @@ def make_train(arg):
 
 
 if __name__ == "__main__":
-
     args = tyro.cli(PPO_Args)
-    print(
-        f"Running {args.model_name} on {args.env_name} for {args.total_timesteps} steps"
-    )
+    date = datetime.datetime.now()
+
+    id = f"{date.year}-{date.month}-{date.day}_{date.hour}:{date.minute}"
+    exp_name = os.path.basename(__file__).rstrip(".py")
+    run_name = f"igs__{exp_name}_{args.env_name}__{id}"
+
+    print(f"Running {exp_name} on {args.env_name} for {args.total_timesteps} steps")
     t = time.time()
     rng = jax.random.PRNGKey(args.seed)
     rngs = jax.random.split(rng, args.n_agents)
@@ -311,18 +315,20 @@ if __name__ == "__main__":
         f'Finished training in {time.strftime("%H:%M:%S", time.gmtime(time.time() - t))}'
     )
 
+    returns = outs["metrics"]["returned_episode_returns"]
+    n_episodes = returns.shape[1]
+    returns = outs["metrics"]["returned_episode_returns"].reshape(
+        args.n_agents, n_episodes, -1
+    )
+    returns = returns.transpose(1, 0, 2).reshape(n_episodes, -1)
+    avg_returns = pd.Series(returns.mean(axis=1))
+    std_returns = pd.Series(returns.std(axis=1))
+
+    path = f"logs/{args.env_name}/{run_name}"
+    avg_returns.to_csv(f"{path}_avg_returns.csv")
+    std_returns.to_csv(f"{path}_std_returns.csv")
+
     if args.log_results:
-
-        returns = outs["metrics"]["returned_episode_returns"]
-        n_episodes = returns.shape[1]
-        returns = outs["metrics"]["returned_episode_returns"].reshape(
-            args.n_agents, n_episodes, -1
-        )
-        df_returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
-        avg_returns = df_returns.mean(axis=1)
-
-        exp_name = os.path.basename(__file__).rstrip(".py")
-        run_name = f"igs__{exp_name}_{args.env_name}__{int(time.time())}"
         hyperparameters = vars(args)
         html_table = "<table><tr><th>Parameter</th><th>Value</th></tr>"
         for key, value in hyperparameters.items():
@@ -342,22 +348,51 @@ if __name__ == "__main__":
         wandb.run.log_code(os.path.join(args.logging_dir, "/logs"))
         wandb.log({"hyperparameters": wandb.Html(html_table)})
         wandb.run.summary["total_timesteps"] = args.total_timesteps
-        wandb.run.summary["n_eps"] = df_returns.shape[0]
+        wandb.run.summary["n_episodes"] = n_episodes
 
-        fig = px.line(avg_returns)
+        eps = np.arange(n_episodes)
+        fig = go.Figure(
+            [
+                go.Scatter(
+                    x=eps,
+                    y=avg_returns,
+                    mode="lines",
+                    name="Mean",
+                ),
+                go.Scatter(
+                    x=eps,
+                    y=avg_returns + std_returns,
+                    line=dict(width=0),
+                    showlegend=False,
+                    mode="lines",
+                    name="Upper Bound",
+                    fill=None,
+                ),
+                go.Scatter(
+                    x=eps,
+                    y=avg_returns - std_returns,
+                    line=dict(width=0),
+                    mode="lines",
+                    fill="tonexty",  # Fill area between y_upper and y_lower
+                    fillcolor="rgba(0,191,255, 0.4)",
+                    showlegend=False,
+                    name="Lower Bound",
+                ),
+            ]
+        )
         fig.update_layout(
-            title=f"Returns over {df_returns.shape[0]} episodes, averaged across {args.n_agents} agents, {args.model_name} - {args.env_name}",
+            title=f"Returns over {n_episodes} episodes, averaged across {args.n_agents} agents, {exp_name} - {args.env_name}",
             xaxis_title="Episodes",
             yaxis_title="Average return per episode",
             showlegend=False,
         )
+
         wandb.log({"Charts/average_returns": wandb.Html(plotly.io.to_html(fig))})
 
         if not os.path.exists(f"logs/{args.env_name}"):
             os.makedirs(f"logs/{args.env_name}", exist_ok=True)
 
-        path = f"logs/{args.env_name}/{run_name}.csv"
-        avg_returns.to_csv(path)
         artifact = wandb.Artifact(f"{run_name}_artifacts", type="dataset")
-        artifact.add_file(path)
+        artifact.add_file(f"{path}_avg_returns.csv")
+        artifact.add_file(f"{path}_std_returns.csv")
         wandb.log_artifact(artifact)
