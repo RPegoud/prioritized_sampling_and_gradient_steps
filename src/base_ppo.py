@@ -19,9 +19,9 @@ import tyro
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import FlattenObservationWrapper, LogWrapper
+from utils import PPO_Args, Transition
 
 import wandb
-from utils import PPO_Args, Transition
 
 
 class ActorCritic(nn.Module):
@@ -301,7 +301,7 @@ if __name__ == "__main__":
     args = tyro.cli(PPO_Args)
     date = datetime.datetime.now()
 
-    id = f"{date.year}-{date.month}-{date.day}_{date.hour}:{date.minute}"
+    id = f"{date.year}-{date.month}-{date.day}__{date.hour}_{date.minute}"
     exp_name = os.path.basename(__file__).rstrip(".py")
     run_name = f"igs__{exp_name}_{args.env_name}__{id}"
 
