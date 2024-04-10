@@ -16,10 +16,12 @@ class PPO_Args:
     """the wandb project name"""
     wandb_entity: str = "rpegoud"
     """the entity (team) of wandb's project"""
-    logging_dir: str = "."  # "$HOME/wandb"
+    logging_dir: str = "."
     """the base directory for logging and wandb storage."""
 
     # Algorithm specific arguments
+    trainer: str = "base_ppo"
+    """the training algorithm to use"""
     env_name: str = "CartPole-v1"
     """environment to run"""
     total_timesteps: int = 5e4
@@ -35,13 +37,14 @@ class PPO_Args:
     update_epochs: int = 4
     """the number of update steps in a single epoch"""
     num_minibatches: int = 4
+    """the number of minibatches"""
     gamma: float = 0.99
     """discount factor"""
     gae_lambda: float = 0.95
     """the lambda exponent used in generalized advantage estimation"""
     clip_eps: float = 0.2
     """the threshold used to clip epsilon"""
-    ent_coef: float = 0.5
+    ent_coef: float = 0.01
     """entropy coefficient"""
     vf_coef: float = 0.5
     """value function coefficient"""

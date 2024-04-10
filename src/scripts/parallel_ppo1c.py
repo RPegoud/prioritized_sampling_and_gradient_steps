@@ -1,8 +1,4 @@
-# ----- CREDITS: Chris Lu @ PureJaxRL -----
-# https://github.com/luchris429/purejaxrl/blob/main/purejaxrl/ppo.py
-import datetime
-import os
-import time
+from pathlib import Path
 from typing import Sequence
 
 import distrax
@@ -13,15 +9,11 @@ import jax.numpy as jnp
 import numpy as np
 import optax
 import pandas as pd
-import plotly
-import plotly.graph_objects as go
 import tyro
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import FlattenObservationWrapper, LogWrapper
 from utils import PPO_Args, Transition
-
-import wandb
 
 
 class ActorCritic(nn.Module):
@@ -62,7 +54,7 @@ class ActorCritic(nn.Module):
         return pi, jnp.squeeze(critic, axis=-1)
 
 
-def make_train(arg):
+def make_train(args):
     NUM_UPDATES = args.total_timesteps // args.num_steps // args.num_envs
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
     env, env_params = gymnax.make(args.env_name)
@@ -171,8 +163,9 @@ def make_train(arg):
                     # gae is computed backwards as the advantage at time t
                     # depends on the estimated advantages of future timesteps
                     reverse=True,
-                    # unrolls the loop body of the scan operation 16 iterations at a time
-                    # enables the 128 steps (default value) to be completed in 8 iterations
+                    # unrolls the loop body of the scan operation 16 iterations
+                    # at a time,  enables the 128 steps (default value) to
+                    # be completed in 8 iterations
                     unroll=16,
                 )
                 return advantages, advantages + traj_batch.value
@@ -196,13 +189,12 @@ def make_train(arg):
                         ).clip(-args.clip_eps, args.clip_eps)
                         value_losses = jnp.square(value - targets)
                         value_losses_clipped = jnp.square(value_pred_clipped - targets)
-                        value_loss = (
-                            0.5 * jnp.maximum(value_losses, value_losses_clipped).mean()
+                        value_loss = 0.5 * jnp.maximum(
+                            value_losses, value_losses_clipped
                         )
 
                         # CALCULATE ACTOR LOSS
                         ratio = jnp.exp(log_prob - traj_batch.log_prob)
-                        gae = (gae - gae.mean()) / (gae.std() + 1e-8)
                         loss_actor1 = ratio * gae
                         loss_actor2 = (
                             jnp.clip(
@@ -213,8 +205,7 @@ def make_train(arg):
                             * gae
                         )
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
-                        loss_actor = loss_actor.mean()
-                        entropy = pi.entropy().mean()
+                        entropy = pi.entropy()
 
                         total_loss = (
                             loss_actor
@@ -223,11 +214,58 @@ def make_train(arg):
                         )
                         return total_loss, (value_loss, loss_actor, entropy)
 
+                    def get_per_sample_norms(grads: dict):
+                        """
+                        Computes the normalized L2-norm of the per-sample gradient.
+                        """
+
+                        def _single_sample_norm(grads, idx):
+                            """
+                            For a single sample, computes the L2-norm of all the gradient components.
+                            """
+                            sum_of_squares = jnp.array(
+                                jax.tree_flatten(
+                                    jax.tree_map(lambda g: jnp.sum(g[idx] ** 2), grads),
+                                )[0]
+                            ).sum()
+
+                            return jnp.sqrt(sum_of_squares)
+
+                        sample_norms = jax.vmap(_single_sample_norm, in_axes=(None, 0))(
+                            grads,
+                            jnp.arange(args.num_steps * args.num_minibatches),
+                        )
+                        return sample_norms
+
+                    def get_weighted_grads(grads, weights):
+                        """Divides the per-sample gradients by the norm ratio."""
+
+                        def _single_sample_broadcast(idx):
+                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+
+                        per_sample_grads = jax.vmap(_single_sample_broadcast)(
+                            jnp.arange(args.num_steps * args.num_minibatches)
+                        )
+                        return jax.tree_map(lambda x: x.mean(axis=0), per_sample_grads)
+
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
-                    total_loss, grads = grad_fn(
-                        train_state.params, traj_batch, advantages, targets
+                    total_loss, per_sample_grads = jax.vmap(
+                        grad_fn, in_axes=(None, 0, 0, 0)
+                    )(
+                        train_state.params,
+                        traj_batch,
+                        advantages,
+                        targets,
                     )
-                    train_state = train_state.apply_gradients(grads=grads)
+
+                    per_sample_norms = (
+                        get_per_sample_norms(per_sample_grads) ** args.alpha
+                    )
+                    weighted_grads = get_weighted_grads(
+                        per_sample_grads, per_sample_norms
+                    )
+
+                    train_state = train_state.apply_gradients(grads=weighted_grads)
                     return train_state, total_loss
 
                 train_state, traj_batch, advantages, targets, rng = update_state
@@ -298,101 +336,23 @@ def make_train(arg):
 
 
 if __name__ == "__main__":
+
     args = tyro.cli(PPO_Args)
-    date = datetime.datetime.now()
-
-    id = f"{date.year}-{date.month}-{date.day}__{date.hour}_{date.minute}"
-    exp_name = os.path.basename(__file__).rstrip(".py")
-    run_name = f"igs__{exp_name}_{args.env_name}__{id}"
-
-    print(f"Running {exp_name} on {args.env_name} for {args.total_timesteps} steps")
-    t = time.time()
     rng = jax.random.PRNGKey(args.seed)
     rngs = jax.random.split(rng, args.n_agents)
     train_vjit = jax.jit(jax.vmap(make_train(args)))
     outs = train_vjit(rngs)
-    print(
-        f'Finished training in {time.strftime("%H:%M:%S", time.gmtime(time.time() - t))}'
-    )
 
     returns = outs["metrics"]["returned_episode_returns"]
     n_episodes = returns.shape[1]
     returns = outs["metrics"]["returned_episode_returns"].reshape(
         args.n_agents, n_episodes, -1
     )
-    returns = returns.transpose(1, 0, 2).reshape(n_episodes, -1)
-    avg_returns = pd.Series(returns.mean(axis=1))
-    std_returns = pd.Series(returns.std(axis=1))
-
-    path = f"logs/{args.env_name}/{run_name}"
-    avg_returns.to_csv(f"{path}_avg_returns.csv")
-    std_returns.to_csv(f"{path}_std_returns.csv")
-
+    returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
+    print(returns.shape)
     if args.log_results:
-        hyperparameters = vars(args)
-        html_table = "<table><tr><th>Parameter</th><th>Value</th></tr>"
-        for key, value in hyperparameters.items():
-            html_table += f"<tr><td>{key}</td><td>{value}</td></tr>"
-
-        html_table += "</table>"
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
-            config=vars(args),
-            name=run_name,
-            monitor_gym=True,
-            save_code=True,
-            dir=args.logging_dir,
-        )
-        wandb.run.log_code(os.path.join(args.logging_dir, "/logs"))
-        wandb.log({"hyperparameters": wandb.Html(html_table)})
-        wandb.run.summary["total_timesteps"] = args.total_timesteps
-        wandb.run.summary["n_episodes"] = n_episodes
-
-        eps = np.arange(n_episodes)
-        fig = go.Figure(
-            [
-                go.Scatter(
-                    x=eps,
-                    y=avg_returns,
-                    mode="lines",
-                    name="Mean",
-                ),
-                go.Scatter(
-                    x=eps,
-                    y=avg_returns + std_returns,
-                    line=dict(width=0),
-                    showlegend=False,
-                    mode="lines",
-                    name="Upper Bound",
-                    fill=None,
-                ),
-                go.Scatter(
-                    x=eps,
-                    y=avg_returns - std_returns,
-                    line=dict(width=0),
-                    mode="lines",
-                    fill="tonexty",  # Fill area between y_upper and y_lower
-                    fillcolor="rgba(0,191,255, 0.4)",
-                    showlegend=False,
-                    name="Lower Bound",
-                ),
-            ]
-        )
-        fig.update_layout(
-            title=f"Returns over {n_episodes} episodes, averaged across {args.n_agents} agents, {exp_name} - {args.env_name}",
-            xaxis_title="Episodes",
-            yaxis_title="Average return per episode",
-            showlegend=False,
-        )
-
-        wandb.log({"Charts/average_returns": wandb.Html(plotly.io.to_html(fig))})
-
-        if not os.path.exists(f"logs/{args.env_name}"):
-            os.makedirs(f"logs/{args.env_name}", exist_ok=True)
-
-        artifact = wandb.Artifact(f"{run_name}_artifacts", type="dataset")
-        artifact.add_file(f"{path}_avg_returns.csv")
-        artifact.add_file(f"{path}_std_returns.csv")
-        wandb.log_artifact(artifact)
+        path = f"logs/{args.env_name}_parallel_ppo1c.csv"
+        print("logging results ...")
+        Path("logs").mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(returns).to_csv(path)
+        print("done !")

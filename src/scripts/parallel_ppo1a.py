@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Sequence
 
 import distrax
@@ -13,7 +12,6 @@ import tyro
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import FlattenObservationWrapper, LogWrapper
-
 from utils import PPO_Args, Transition
 
 
@@ -55,7 +53,7 @@ class ActorCritic(nn.Module):
         return pi, jnp.squeeze(critic, axis=-1)
 
 
-def make_train(arg):
+def make_train(args):
     NUM_UPDATES = args.total_timesteps // args.num_steps // args.num_envs
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
     env, env_params = gymnax.make(args.env_name)
@@ -236,7 +234,7 @@ def make_train(arg):
                             grads,
                             jnp.arange(args.num_steps * args.num_minibatches),
                         )
-                        return sample_norms / sample_norms.sum()
+                        return sample_norms
 
                     def get_weighted_grads(grads, weights):
                         """Divides the per-sample gradients by the norm ratio."""
@@ -349,9 +347,4 @@ if __name__ == "__main__":
     )
     returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
     print(returns.shape)
-    if args.log_results:
-        path = f"logs/{args.env_name}_parallel_ppo1b.csv"
-        print("logging results ...")
-        Path("logs").mkdir(parents=True, exist_ok=True)
-        pd.DataFrame(returns).to_csv(path)
-        print("done !")
+    # pd.DataFrame(returns).to_csv(f"../logs/{env_name}_parallel_ppo1a.csv")

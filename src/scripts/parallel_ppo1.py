@@ -13,7 +13,6 @@ import tyro
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import FlattenObservationWrapper, LogWrapper
-
 from utils import PPO_Args, Transition
 
 
@@ -55,7 +54,7 @@ class ActorCritic(nn.Module):
         return pi, jnp.squeeze(critic, axis=-1)
 
 
-def make_train(arg):
+def make_train(args):
     NUM_UPDATES = args.total_timesteps // args.num_steps // args.num_envs
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
     env, env_params = gymnax.make(args.env_name)
@@ -215,29 +214,6 @@ def make_train(arg):
                         )
                         return total_loss, (value_loss, loss_actor, entropy)
 
-                    def get_per_sample_norms(grads: dict):
-                        """
-                        Computes the normalized L2-norm of the per-sample gradient.
-                        """
-
-                        def _single_sample_norm(grads, idx):
-                            """
-                            For a single sample, computes the L2-norm of all the gradient components.
-                            """
-                            sum_of_squares = jnp.array(
-                                jax.tree_flatten(
-                                    jax.tree_map(lambda g: jnp.sum(g[idx] ** 2), grads),
-                                )[0]
-                            ).sum()
-
-                            return jnp.sqrt(sum_of_squares)
-
-                        sample_norms = jax.vmap(_single_sample_norm, in_axes=(None, 0))(
-                            grads,
-                            jnp.arange(args.num_steps * args.num_minibatches),
-                        )
-                        return sample_norms / sample_norms.sum()
-
                     def get_weighted_grads(grads, weights):
                         """Divides the per-sample gradients by the norm ratio."""
 
@@ -259,14 +235,11 @@ def make_train(arg):
                         targets,
                     )
 
-                    per_sample_norms = (
-                        get_per_sample_norms(per_sample_grads) ** arg.alpha
+                    grads = get_weighted_grads(
+                        per_sample_grads,
+                        jnp.ones(args.num_steps * args.num_minibatches),
                     )
-                    weighted_grads = get_weighted_grads(
-                        per_sample_grads, per_sample_norms
-                    )
-
-                    train_state = train_state.apply_gradients(grads=weighted_grads)
+                    train_state = train_state.apply_gradients(grads=grads)
                     return train_state, total_loss
 
                 train_state, traj_batch, advantages, targets, rng = update_state
@@ -337,7 +310,6 @@ def make_train(arg):
 
 
 if __name__ == "__main__":
-
     args = tyro.cli(PPO_Args)
     rng = jax.random.PRNGKey(args.seed)
     rngs = jax.random.split(rng, args.n_agents)
@@ -352,8 +324,9 @@ if __name__ == "__main__":
     returns = pd.DataFrame(returns.transpose(1, 0, 2).reshape(n_episodes, -1))
     print(returns.shape)
     if args.log_results:
-        path = f"logs/{args.env_name}_parallel_ppo1d.csv"
+        path = f"logs/{args.env_name}_parallel_ppo1.csv"
         print("logging results ...")
         Path("logs").mkdir(parents=True, exist_ok=True)
         pd.DataFrame(returns).to_csv(path)
         print("done !")
+    
