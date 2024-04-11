@@ -8,6 +8,8 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import tyro
+
+import wandb
 from algs import (
     base_ppo,
     parallel_ppo_1,
@@ -17,8 +19,6 @@ from algs import (
     parallel_ppo_1d,
 )
 from utils import PPO_Args
-
-import wandb
 
 trainers = {
     "base_ppo": base_ppo,
@@ -45,19 +45,35 @@ if __name__ == "__main__":
     exec_time = time.gmtime(time.time() - t)
     print(f'Finished training in {time.strftime("%H:%M:%S", exec_time)}')
 
-    avg_returns = pd.Series(
+    # Metrics per episode
+    avg_ep_returns = pd.Series(
         outs["metrics"]["returned_episode_returns"].mean(axis=(0, 2, 3))
     )
-    std_returns = pd.Series(
+    std_ep_returns = pd.Series(
         outs["metrics"]["returned_episode_returns"].std(axis=(0, 2, 3))
     )
-    n_episodes = avg_returns.shape[0]
+    n_episodes = avg_ep_returns.shape[0]
+
+    # Metrics per steps
+    avg_step_returns = pd.Series(
+        outs["metrics"]["returned_episode_returns"]
+        .reshape(args.n_agents, -1)
+        .mean(axis=0)
+    )
+    std_step_returns = pd.Series(
+        outs["metrics"]["returned_episode_returns"]
+        .reshape(args.n_agents, -1)
+        .std(axis=0)
+    )
+    n_steps = avg_step_returns.shape[0]
 
     path = f"logs/{args.env_name}"
     if not os.path.exists(path):
         os.makedirs(path)
-    avg_returns.to_csv(f"{path}/{run_name}_avg_returns.csv")
-    std_returns.to_csv(f"{path}/{run_name}_std_returns.csv")
+    avg_ep_returns.to_csv(f"{path}/{run_name}_avg_ep_returns.csv")
+    std_ep_returns.to_csv(f"{path}/{run_name}_std_ep_returns.csv")
+    avg_step_returns.to_csv(f"{path}/{run_name}_avg_step_returns.csv")
+    std_step_returns.to_csv(f"{path}/{run_name}_std_step_returns.csv")
 
     if args.log_results:
         hyperparameters = vars(args)
@@ -87,13 +103,13 @@ if __name__ == "__main__":
             [
                 go.Scatter(
                     x=eps,
-                    y=avg_returns,
+                    y=avg_ep_returns,
                     mode="lines",
                     name="Mean",
                 ),
                 go.Scatter(
                     x=eps,
-                    y=avg_returns + std_returns,
+                    y=avg_ep_returns + std_ep_returns,
                     line=dict(width=0),
                     showlegend=False,
                     mode="lines",
@@ -102,7 +118,7 @@ if __name__ == "__main__":
                 ),
                 go.Scatter(
                     x=eps,
-                    y=avg_returns - std_returns,
+                    y=avg_ep_returns - std_ep_returns,
                     line=dict(width=0),
                     mode="lines",
                     fill="tonexty",  # Fill area between y_upper and y_lower
@@ -119,12 +135,53 @@ if __name__ == "__main__":
             showlegend=False,
         )
 
-        wandb.log({"Charts/average_returns": wandb.Html(plotly.io.to_html(fig))})
+        wandb.log({"Charts/average_ep_returns": wandb.Html(plotly.io.to_html(fig))})
+
+        steps = np.arange(n_steps)
+        fig = go.Figure(
+            [
+                go.Scatter(
+                    x=steps,
+                    y=avg_step_returns,
+                    mode="lines",
+                    name="Mean",
+                ),
+                go.Scatter(
+                    x=steps,
+                    y=avg_step_returns + std_step_returns,
+                    line=dict(width=0),
+                    showlegend=False,
+                    mode="lines",
+                    name="Upper Bound",
+                    fill=None,
+                ),
+                go.Scatter(
+                    x=steps,
+                    y=avg_step_returns - std_step_returns,
+                    line=dict(width=0),
+                    mode="lines",
+                    fill="tonexty",  # Fill area between y_upper and y_lower
+                    fillcolor="rgba(0,191,255, 0.4)",
+                    showlegend=False,
+                    name="Lower Bound",
+                ),
+            ]
+        )
+        fig.update_layout(
+            title=f"Returns over {n_steps} steps, averaged across {args.n_agents} agents, {args.trainer} - {args.env_name}",  # noqa: E501
+            xaxis_title="Steps",
+            yaxis_title="Average return per step",
+            showlegend=False,
+        )
+
+        wandb.log({"Charts/average_step_returns": wandb.Html(plotly.io.to_html(fig))})
 
         if not os.path.exists(f"logs/{args.env_name}"):
             os.makedirs(f"logs/{args.env_name}", exist_ok=True)
 
         artifact = wandb.Artifact(f"{run_name}_artifacts", type="dataset")
-        artifact.add_file(f"{path}/{run_name}_avg_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_std_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_avg_ep_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_std_ep_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_avg_step_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_std_step_returns.csv")
         wandb.log_artifact(artifact)
