@@ -18,7 +18,7 @@ from algs import (
     parallel_ppo_1c,
     parallel_ppo_1d,
 )
-from utils import PPO_Args
+from utils import PPO_Args, format_number
 
 trainers = {
     "base_ppo": base_ppo,
@@ -70,10 +70,11 @@ if __name__ == "__main__":
     path = f"logs/{args.env_name}"
     if not os.path.exists(path):
         os.makedirs(path)
-    avg_ep_returns.to_csv(f"{path}/{run_name}_avg_ep_returns.csv")
-    std_ep_returns.to_csv(f"{path}/{run_name}_std_ep_returns.csv")
-    avg_step_returns.to_csv(f"{path}/{run_name}_avg_step_returns.csv")
-    std_step_returns.to_csv(f"{path}/{run_name}_std_step_returns.csv")
+    fmt_n_steps = format_number(args.total_timesteps)
+    avg_ep_returns.to_csv(f"{path}/{run_name}_{fmt_n_steps}_avg_ep_returns.csv")
+    std_ep_returns.to_csv(f"{path}/{run_name}_{fmt_n_steps}_std_ep_returns.csv")
+    avg_step_returns.to_csv(f"{path}/{run_name}_{fmt_n_steps}_avg_step_returns.csv")
+    std_step_returns.to_csv(f"{path}/{run_name}_{fmt_n_steps}_std_step_returns.csv")
 
     if args.log_results:
         hyperparameters = vars(args)
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         wandb.run.log_code(os.path.join(args.logging_dir, "/logs"))
         wandb.log({"hyperparameters": wandb.Html(html_table)})
         wandb.run.summary["trainer"] = args.trainer
-        wandb.run.summary["total_timesteps"] = args.total_timesteps
+        wandb.run.summary["total_timesteps"] = fmt_n_steps
         wandb.run.summary["n_episodes"] = n_episodes
 
         eps = np.arange(n_episodes)
@@ -179,9 +180,9 @@ if __name__ == "__main__":
         if not os.path.exists(f"logs/{args.env_name}"):
             os.makedirs(f"logs/{args.env_name}", exist_ok=True)
 
-        artifact = wandb.Artifact(f"{run_name}_artifacts", type="dataset")
-        artifact.add_file(f"{path}/{run_name}_avg_ep_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_std_ep_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_avg_step_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_std_step_returns.csv")
+        artifact = wandb.Artifact(f"{run_name}_{fmt_n_steps}_artifacts", type="dataset")
+        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_ep_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_ep_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_step_returns.csv")
+        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_step_returns.csv")
         wandb.log_artifact(artifact)
