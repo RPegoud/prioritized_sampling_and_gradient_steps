@@ -8,8 +8,6 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import tyro
-
-import wandb
 from algs import (
     base_ppo,
     parallel_ppo_1,
@@ -19,6 +17,8 @@ from algs import (
     parallel_ppo_1d,
 )
 from utils import PPO_Args, format_number
+
+import wandb
 
 trainers = {
     "base_ppo": base_ppo,
@@ -33,8 +33,10 @@ if __name__ == "__main__":
     args = tyro.cli(PPO_Args)
     date = datetime.datetime.now()
 
+    alpha = 0.2 if args.alpha != 0.2 else None
+
     id = f"{date.year}-{date.month}-{date.day}__{date.hour}_{date.minute}"
-    run_name = f"igs__{args.trainer}_{args.env_name}__{id}"
+    run_name = f"igs__{args.trainer}{alpha}_{args.env_name}__{id}"
     print(f"Running {args.trainer} on {args.env_name} for {args.total_timesteps} steps")
 
     t = time.time()
