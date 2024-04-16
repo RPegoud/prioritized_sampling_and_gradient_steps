@@ -12,7 +12,7 @@
 #SBATCH --hint=nomultithread
 #SBATCH --account=xyk@v100
 
-set -x # activer l’echo des commandes
+set -x
 conda activate igs
-# python main.py --total-timesteps 10000000 --log-results --trainer parallel_ppo_1
+wandb offline
 python main.py --total-timesteps 500000 --log-results --trainer base_ppo --env-name Breakout-MinAtar
