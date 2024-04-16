@@ -18,27 +18,11 @@ envs=(
 
 alphas=("0.2" "0.4" "0.6")
 
-for trainer in "${trainers[@]}"
-do
-    for env in "${envs[@]}"
-    do
-        if [[ "$trainer" == "parallel_ppo_1c" || "$trainer" == "parallel_ppo_1d" ]]
-        then
-            for alpha in "${alphas[@]}"
-            do
-                create_and_submit "$trainer" "$env" "$alpha"
-            done
-        else
-            create_and_submit "$trainer" "$env" "0.2"
-        fi
-    done
-done
-
 function create_and_submit {
     trainer=$1
     env=$2
     alpha=$3
-    cat <<EOF > "${trainer}_${env}_${alpha}.slurm"
+    cat <<EOF >"${trainer}_${env}_${alpha}.sh"
 #!/bin/bash
 #SBATCH --job-name=${trainer}_${env}_${alpha}
 #SBATCH --output=${trainer}_${env}_${alpha}%j.out
@@ -58,5 +42,17 @@ conda activate igs
 wandb offline
 python main.py --total-timesteps 10000000 --log-results --trainer "$trainer" --env-name "$env" --alpha "$alpha"
 EOF
-    sbatch "${trainer}_${env}_${alpha}.slurm"
+    sbatch "${trainer}_${env}_${alpha}.sh"
 }
+
+for trainer in "${trainers[@]}"; do
+    for env in "${envs[@]}"; do
+        if [[ "$trainer" == "parallel_ppo_1c" || "$trainer" == "parallel_ppo_1d" ]]; then
+            for alpha in "${alphas[@]}"; do
+                create_and_submit "$trainer" "$env" "$alpha"
+            done
+        else
+            create_and_submit "$trainer" "$env" "0.2"
+        fi
+    done
+done
