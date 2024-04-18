@@ -140,44 +140,44 @@ if __name__ == "__main__":
 
         wandb.log({"Charts/average_ep_returns": wandb.Html(plotly.io.to_html(fig))})
 
-        steps = np.arange(n_steps)
-        fig = go.Figure(
-            [
-                go.Scatter(
-                    x=steps,
-                    y=avg_step_returns,
-                    mode="lines",
-                    name="Mean",
-                ),
-                go.Scatter(
-                    x=steps,
-                    y=avg_step_returns + std_step_returns,
-                    line=dict(width=0),
-                    showlegend=False,
-                    mode="lines",
-                    name="Upper Bound",
-                    fill=None,
-                ),
-                go.Scatter(
-                    x=steps,
-                    y=avg_step_returns - std_step_returns,
-                    line=dict(width=0),
-                    mode="lines",
-                    fill="tonexty",  # Fill area between y_upper and y_lower
-                    fillcolor="rgba(0,191,255, 0.4)",
-                    showlegend=False,
-                    name="Lower Bound",
-                ),
-            ]
-        )
-        fig.update_layout(
-            title=f"Returns over {n_steps} steps, averaged across {args.n_agents} agents, {args.trainer} - {args.env_name}",  # noqa: E501
-            xaxis_title="Steps",
-            yaxis_title="Average return per step",
-            showlegend=False,
-        )
+        # steps = np.arange(n_steps)
+        # fig = go.Figure(
+        #     [
+        #         go.Scatter(
+        #             x=steps,
+        #             y=avg_step_returns,
+        #             mode="lines",
+        #             name="Mean",
+        #         ),
+        #         go.Scatter(
+        #             x=steps,
+        #             y=avg_step_returns + std_step_returns,
+        #             line=dict(width=0),
+        #             showlegend=False,
+        #             mode="lines",
+        #             name="Upper Bound",
+        #             fill=None,
+        #         ),
+        #         go.Scatter(
+        #             x=steps,
+        #             y=avg_step_returns - std_step_returns,
+        #             line=dict(width=0),
+        #             mode="lines",
+        #             fill="tonexty",  # Fill area between y_upper and y_lower
+        #             fillcolor="rgba(0,191,255, 0.4)",
+        #             showlegend=False,
+        #             name="Lower Bound",
+        #         ),
+        #     ]
+        # )
+        # fig.update_layout(
+        #     title=f"Returns over {n_steps} steps, averaged across {args.n_agents} agents, {args.trainer} - {args.env_name}",  # noqa: E501
+        #     xaxis_title="Steps",
+        #     yaxis_title="Average return per step",
+        #     showlegend=False,
+        # )
 
-        wandb.log({"Charts/average_step_returns": wandb.Html(plotly.io.to_html(fig))})
+        # wandb.log({"Charts/average_step_returns": wandb.Html(plotly.io.to_html(fig))})
 
         if not os.path.exists(f"logs/{args.env_name}"):
             os.makedirs(f"logs/{args.env_name}", exist_ok=True)
