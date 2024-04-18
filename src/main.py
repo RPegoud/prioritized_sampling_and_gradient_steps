@@ -33,7 +33,7 @@ if __name__ == "__main__":
     args = tyro.cli(PPO_Args)
     date = datetime.datetime.now()
 
-    alpha = f"0_{int(args.aplha*10)}" if args.alpha != 0.2 else "0_2"
+    alpha = f"0_{int(args.alpha*10)}" if args.alpha != 0.2 else "0_2"
 
     id = f"{date.year}-{date.month}-{date.day}__{date.hour}_{date.minute}"
     run_name = f"igs__{args.trainer}{alpha}_{args.env_name}__{id}"
