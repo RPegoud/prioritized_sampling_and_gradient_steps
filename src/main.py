@@ -8,8 +8,8 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import tyro
-
 import wandb
+
 from algs import (
     base_ppo,
     parallel_ppo_1,
@@ -185,6 +185,6 @@ if __name__ == "__main__":
         artifact = wandb.Artifact(f"{run_name}_{fmt_n_steps}_artifacts", type="dataset")
         artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_ep_returns.csv")
         artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_ep_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_step_returns.csv")
-        artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_step_returns.csv")
+        # artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_step_returns.csv")
+        # artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_step_returns.csv")
         wandb.log_artifact(artifact)
