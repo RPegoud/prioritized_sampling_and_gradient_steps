@@ -8,18 +8,24 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import tyro
-
 import wandb
-from continuous_algs import base_ppo_continuous, parallel_ppo_1_continuous
+from continuous_algs import (
+    base_ppo_continuous,
+    parallel_ppo_1_continuous,
+    parallel_ppo_1a_continuous,
+    parallel_ppo_1b_continuous,
+    parallel_ppo_1c_continuous,
+    parallel_ppo_1d_continuous,
+)
 from utils import PPO_Continuous_Args, format_number
 
 trainers = {
     "base_ppo_continuous": base_ppo_continuous,
     "parallel_ppo_1_continuous": parallel_ppo_1_continuous,
-    # "parallel_ppo_1a_continuous": parallel_ppo_1a_continuous,
-    # "parallel_ppo_1b_continuous": parallel_ppo_1b_continuous,
-    # "parallel_ppo_1c_continuous": parallel_ppo_1c_continuous,
-    # "parallel_ppo_1d_continuous": parallel_ppo_1d_continuous,
+    "parallel_ppo_1a_continuous": parallel_ppo_1a_continuous,
+    "parallel_ppo_1b_continuous": parallel_ppo_1b_continuous,
+    "parallel_ppo_1c_continuous": parallel_ppo_1c_continuous,
+    "parallel_ppo_1d_continuous": parallel_ppo_1d_continuous,
 }
 
 if __name__ == "__main__":
