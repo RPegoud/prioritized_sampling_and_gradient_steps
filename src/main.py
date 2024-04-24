@@ -140,51 +140,10 @@ if __name__ == "__main__":
 
         wandb.log({"Charts/average_ep_returns": wandb.Html(plotly.io.to_html(fig))})
 
-        # steps = np.arange(n_steps)
-        # fig = go.Figure(
-        #     [
-        #         go.Scatter(
-        #             x=steps,
-        #             y=avg_step_returns,
-        #             mode="lines",
-        #             name="Mean",
-        #         ),
-        #         go.Scatter(
-        #             x=steps,
-        #             y=avg_step_returns + std_step_returns,
-        #             line=dict(width=0),
-        #             showlegend=False,
-        #             mode="lines",
-        #             name="Upper Bound",
-        #             fill=None,
-        #         ),
-        #         go.Scatter(
-        #             x=steps,
-        #             y=avg_step_returns - std_step_returns,
-        #             line=dict(width=0),
-        #             mode="lines",
-        #             fill="tonexty",  # Fill area between y_upper and y_lower
-        #             fillcolor="rgba(0,191,255, 0.4)",
-        #             showlegend=False,
-        #             name="Lower Bound",
-        #         ),
-        #     ]
-        # )
-        # fig.update_layout(
-        #     title=f"Returns over {n_steps} steps, averaged across {args.n_agents} agents, {args.trainer} - {args.env_name}",  # noqa: E501
-        #     xaxis_title="Steps",
-        #     yaxis_title="Average return per step",
-        #     showlegend=False,
-        # )
-
-        # wandb.log({"Charts/average_step_returns": wandb.Html(plotly.io.to_html(fig))})
-
         if not os.path.exists(f"logs/{args.env_name}"):
             os.makedirs(f"logs/{args.env_name}", exist_ok=True)
 
         artifact = wandb.Artifact(f"{run_name}_{fmt_n_steps}_artifacts", type="dataset")
         artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_ep_returns.csv")
         artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_ep_returns.csv")
-        # artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_avg_step_returns.csv")
-        # artifact.add_file(f"{path}/{run_name}_{fmt_n_steps}_std_step_returns.csv")
         wandb.log_artifact(artifact)

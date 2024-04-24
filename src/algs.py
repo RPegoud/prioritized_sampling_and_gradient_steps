@@ -269,7 +269,8 @@ def base_ppo(args):
                     )
                     for t in range(len(timesteps)):
                         print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            f"global step={timesteps[t]},"
+                            f"episodic return={return_values[t]}"
                         )
 
                 jax.debug.callback(callback, metric)
@@ -523,8 +524,9 @@ def parallel_ppo_1(args):
                         info["timestep"][info["returned_episode"]] * args.num_envs
                     )
                     for t in range(len(timesteps)):
-                        print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            print(
+                                f"global step={timesteps[t]},"
+                                f"episodic return={return_values[t]}"               
                         )
 
                 jax.debug.callback(callback, metric)
@@ -709,7 +711,8 @@ def parallel_ppo_1a(args):
 
                         def _single_sample_norm(grads, idx):
                             """
-                            For a single sample, computes the L2-norm of all the gradient components.
+                            For a single sample, computes the L2-norm of all the
+                            gradient components.
                             """
                             sum_of_squares = jnp.array(
                                 jax.tree_flatten(
@@ -803,7 +806,8 @@ def parallel_ppo_1a(args):
                     )
                     for t in range(len(timesteps)):
                         print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            f"global step={timesteps[t]},"
+                            f"episodic return={return_values[t]}"
                         )
 
                 jax.debug.callback(callback, metric)
@@ -988,7 +992,8 @@ def parallel_ppo_1b(args):
 
                         def _single_sample_norm(grads, idx):
                             """
-                            For a single sample, computes the L2-norm of all the gradient components.
+                            For a single sample, computes the L2-norm of all the
+                            gradient components.
                             """
                             sum_of_squares = jnp.array(
                                 jax.tree_flatten(
@@ -1082,7 +1087,8 @@ def parallel_ppo_1b(args):
                     )
                     for t in range(len(timesteps)):
                         print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            f"global step={timesteps[t]},"
+                            f"episodic return={return_values[t]}"
                         )
 
                 jax.debug.callback(callback, metric)
@@ -1267,7 +1273,8 @@ def parallel_ppo_1c(args):
 
                         def _single_sample_norm(grads, idx):
                             """
-                            For a single sample, computes the L2-norm of all the gradient components.
+                            For a single sample, computes the L2-norm of all the
+                            gradient components.
                             """
                             sum_of_squares = jnp.array(
                                 jax.tree_flatten(
@@ -1363,7 +1370,8 @@ def parallel_ppo_1c(args):
                     )
                     for t in range(len(timesteps)):
                         print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            f"global step={timesteps[t]},"
+                            f"episodic return={return_values[t]}"
                         )
 
                 jax.debug.callback(callback, metric)
@@ -1548,7 +1556,8 @@ def parallel_ppo_1d(args):
 
                         def _single_sample_norm(grads, idx):
                             """
-                            For a single sample, computes the L2-norm of all the gradient components.
+                            For a single sample, computes the L2-norm of all the
+                            gradient components.
                             """
                             sum_of_squares = jnp.array(
                                 jax.tree_flatten(
@@ -1644,7 +1653,8 @@ def parallel_ppo_1d(args):
                     )
                     for t in range(len(timesteps)):
                         print(
-                            f"global step={timesteps[t]}, episodic return={return_values[t]}"
+                            f"global step={timesteps[t]},"
+                            f"episodic return={return_values[t]}"
                         )
 
                 jax.debug.callback(callback, metric)

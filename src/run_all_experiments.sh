@@ -22,7 +22,8 @@ function create_and_submit {
     trainer=$1
     env=$2
     alpha=$3
-    cat <<EOF >"${trainer}_${env}_${alpha}.sh"
+
+    sbatch <<EOF
 #!/bin/bash
 #SBATCH --job-name=${trainer}_${env}_${alpha}
 #SBATCH --output=${trainer}_${env}_${alpha}%j.out
@@ -44,11 +45,11 @@ set -x
 module load python/3.10.4
 conda activate igs
 wandb offline
-cd $WORK/prioritized_sampling_and_gradient_steps/src
-python main.py --total-timesteps 10000000 --log-results --trainer "$trainer" --env-name "$env" --alpha "$alpha"
+cd \$WORK/prioritized_sampling_and_gradient_steps/src
+python main.py --total-timesteps 5000000 --log-results --trainer "$trainer" --env-name "$env" --alpha "$alpha"
 EOF
+
     echo "Submitting ${trainer} run on ${env}, alpha: ${alpha}"
-    sbatch "${trainer}_${env}_${alpha}.sh"
 }
 
 for trainer in "${trainers[@]}"; do
