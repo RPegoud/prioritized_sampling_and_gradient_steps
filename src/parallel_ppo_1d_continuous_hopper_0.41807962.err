@@ -1,0 +1,307 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda deactivate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
++ module load python/3.10.4
++ unset _mlshdbg
++ '[' 0 = 1 ']'
++ unset _mlre _mlIFS
++ '[' -n x ']'
++ _mlIFS=' 	
+'
++ IFS=' '
++ for _mlv in ${MODULES_RUN_QUARANTINE:-}
++ '[' LD_LIBRARY_PATH = LD_LIBRARY_PATH -a LD_LIBRARY_PATH = LD_LIBRARY_PATH ']'
+++ eval 'echo ${LD_LIBRARY_PATH+x}'
++++ echo x
++ '[' -n x ']'
+++ eval 'echo ${LD_LIBRARY_PATH}'
++++ echo /gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib
++ _mlre='LD_LIBRARY_PATH_modquar='\''/gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib'\'' '
++ _mlrv=MODULES_RUNENV_LD_LIBRARY_PATH
+++ eval 'echo ${MODULES_RUNENV_LD_LIBRARY_PATH:-}'
++++ echo
++ _mlre='LD_LIBRARY_PATH_modquar='\''/gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib'\'' LD_LIBRARY_PATH='\'''\'' '
++ '[' -n 'LD_LIBRARY_PATH_modquar='\''/gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib'\'' LD_LIBRARY_PATH='\'''\'' ' ']'
+++ eval 'LD_LIBRARY_PATH_modquar='\''/gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib'\''' 'LD_LIBRARY_PATH='\'''\''' /gpfslocalsup/spack_soft/tcl/8.6.8/gcc-4.8.5-5nqkfcnctewdheju62zvqbsonnzszr6m/bin/tclsh /gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/libexec/modulecmd.tcl bash '"$@"'
++++ LD_LIBRARY_PATH_modquar=/gpfslocalsys/slurm/current/lib/slurm:/gpfslocalsys/slurm/current/lib
++++ LD_LIBRARY_PATH=
++++ /gpfslocalsup/spack_soft/tcl/8.6.8/gcc-4.8.5-5nqkfcnctewdheju62zvqbsonnzszr6m/bin/tclsh /gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/libexec/modulecmd.tcl bash load python/3.10.4
++ eval '_LMFILES__modshare=/gpfslocalsup/pub/modules-idris-env4/modulefiles/linux-rhel8-skylake_avx512/python/3.10.4:1;' export '_LMFILES__modshare;
+LOADEDMODULES_modshare=python/3.10.4:1;' export 'LOADEDMODULES_modshare;
+PYTHONUNBUFFERED=1;' export 'PYTHONUNBUFFERED;
+MODULES_LMCONFLICT_modshare=python/3.10.4\&anaconda-py3\&anaconda-py2\&python\&tensorflow-gpu\&pytorch-gpu:1;' export 'MODULES_LMCONFLICT_modshare;
+_LMFILES_=/gpfslocalsup/pub/modules-idris-env4/modulefiles/linux-rhel8-skylake_avx512/python/3.10.4;' export '_LMFILES_;
+LOADEDMODULES=python/3.10.4;' export 'LOADEDMODULES;
+MODULES_LMCONFLICT=python/3.10.4\&anaconda-py3\&anaconda-py2\&python\&tensorflow-gpu\&pytorch-gpu;' export 'MODULES_LMCONFLICT;
+.' '/gpfslocalsup/pub/anaconda-py3/2021.05/etc/profile.d/conda.sh;
+conda' activate 'python-3.10.4;
+test' '0;'
+++ _LMFILES__modshare=/gpfslocalsup/pub/modules-idris-env4/modulefiles/linux-rhel8-skylake_avx512/python/3.10.4:1
+++ export _LMFILES__modshare
+++ LOADEDMODULES_modshare=python/3.10.4:1
+++ export LOADEDMODULES_modshare
+++ PYTHONUNBUFFERED=1
+++ export PYTHONUNBUFFERED
+++ MODULES_LMCONFLICT_modshare='python/3.10.4&anaconda-py3&anaconda-py2&python&tensorflow-gpu&pytorch-gpu:1'
+++ export MODULES_LMCONFLICT_modshare
+++ _LMFILES_=/gpfslocalsup/pub/modules-idris-env4/modulefiles/linux-rhel8-skylake_avx512/python/3.10.4
+++ export _LMFILES_
+++ LOADEDMODULES=python/3.10.4
+++ export LOADEDMODULES
+++ MODULES_LMCONFLICT='python/3.10.4&anaconda-py3&anaconda-py2&python&tensorflow-gpu&pytorch-gpu'
+++ export MODULES_LMCONFLICT
+++ . /gpfslocalsup/pub/anaconda-py3/2021.05/etc/profile.d/conda.sh
++++ export CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
++++ CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
++++ CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
++++ '[' -z x ']'
+++ conda activate python-3.10.4
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate python-3.10.4
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate python-3.10.4
++++ /gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda shell.posix activate python-3.10.4
+++ ask_conda='. "/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/deactivate.d/libxml2_deactivate.sh"
+PS1='\''(python-3.10.4) '\''
+export PATH='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin'\''
+export CONDA_PREFIX='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''python-3.10.4'\''
+export CONDA_PROMPT_MODIFIER='\''(python-3.10.4) '\''
+export CONDA_PREFIX_2='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs'\''
+export CONDA_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python'\''
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/gdal-activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/geotiff-activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/libglib_activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/proj4-activate.sh"'
+++ eval '. "/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/deactivate.d/libxml2_deactivate.sh"
+PS1='\''(python-3.10.4) '\''
+export PATH='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin'\''
+export CONDA_PREFIX='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''python-3.10.4'\''
+export CONDA_PROMPT_MODIFIER='\''(python-3.10.4) '\''
+export CONDA_PREFIX_2='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs'\''
+export CONDA_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python'\''
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/gdal-activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/geotiff-activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/libglib_activate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/proj4-activate.sh"'
++++ . /linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/deactivate.d/libxml2_deactivate.sh
+++++ test -n ''
+++++ unset XML_CATALOG_FILES
+++++ unset xml_catalog_files_libxml2
++++ PS1='(python-3.10.4) '
++++ export PATH=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin
++++ PATH=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin
++++ export CONDA_PREFIX=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4
++++ CONDA_PREFIX=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=python-3.10.4
++++ CONDA_DEFAULT_ENV=python-3.10.4
++++ export 'CONDA_PROMPT_MODIFIER=(python-3.10.4) '
++++ CONDA_PROMPT_MODIFIER='(python-3.10.4) '
++++ export CONDA_PREFIX_2=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
++++ CONDA_PREFIX_2=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
++++ export CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
++++ CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
++++ CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
++++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/gdal-activate.sh
+++++ [[ -n '' ]]
+++++ [[ -n '' ]]
+++++ '[' -d /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/gdal ']'
+++++ export GDAL_DATA=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/gdal
+++++ GDAL_DATA=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/gdal
+++++ export GDAL_DRIVER_PATH=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/lib/gdalplugins
+++++ GDAL_DRIVER_PATH=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/lib/gdalplugins
+++++ [[ ! -d /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/lib/gdalplugins ]]
+++++ unset GDAL_DRIVER_PATH
+++++ export CPL_ZIP_ENCODING=UTF-8
+++++ CPL_ZIP_ENCODING=UTF-8
++++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/geotiff-activate.sh
+++++ [[ -n '' ]]
+++++ '[' -d /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/epsg_csv ']'
+++++ '[' -d /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/Library/share/epsg_csv ']'
++++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/libglib_activate.sh
+++++ export GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
+++++ GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
+++++ export GSETTINGS_SCHEMA_DIR=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/glib-2.0/schemas
+++++ GSETTINGS_SCHEMA_DIR=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/glib-2.0/schemas
++++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/activate.d/proj4-activate.sh
+++++ '[' -n '' ']'
+++++ '[' -d /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/proj ']'
+++++ export PROJ_LIB=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/proj
+++++ PROJ_LIB=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/proj
+++++ '[' -f /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/share/proj/copyright_and_licenses.csv ']'
+++++ export PROJ_NETWORK=ON
+++++ PROJ_NETWORK=ON
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ test 0
++ _mlstatus=0
++ '[' -n x ']'
++ IFS=' 	
+'
++ unset _mlre _mlv _mlrv _mlIFS
++ '[' -n '' ']'
++ unset _mlshdbg
++ return 0
++ conda activate igs
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate igs
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(python-3.10.4) '
+++ __conda_exe shell.posix activate igs
+++ /gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda shell.posix activate igs
++ ask_conda='. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/proj4-deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/libglib_deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/geotiff-deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/gdal-deactivate.sh"
+PS1='\''(igs) '\''
+export PATH='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin'\''
+export CONDA_PREFIX='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''igs'\''
+export CONDA_PROMPT_MODIFIER='\''(igs) '\''
+export CONDA_PREFIX_3='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4'\''
+export CONDA_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python'\''
+. "/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/activate.d/libxml2_activate.sh"'
++ eval '. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/proj4-deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/libglib_deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/geotiff-deactivate.sh"
+. "/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/gdal-deactivate.sh"
+PS1='\''(igs) '\''
+export PATH='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin'\''
+export CONDA_PREFIX='\''/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''igs'\''
+export CONDA_PROMPT_MODIFIER='\''(igs) '\''
+export CONDA_PREFIX_3='\''/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4'\''
+export CONDA_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python'\''
+. "/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/activate.d/libxml2_activate.sh"'
+++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/proj4-deactivate.sh
++++ unset PROJ_LIB
++++ unset PROJ_NETWORK
++++ '[' -n '' ']'
+++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/libglib_deactivate.sh
++++ export GSETTINGS_SCHEMA_DIR=
++++ GSETTINGS_SCHEMA_DIR=
++++ unset GSETTINGS_SCHEMA_DIR_CONDA_BACKUP
++++ '[' -z ']'
++++ unset GSETTINGS_SCHEMA_DIR
+++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/geotiff-deactivate.sh
++++ unset GEOTIFF_CSV
++++ [[ -n '' ]]
+++ . /gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4/etc/conda/deactivate.d/gdal-deactivate.sh
++++ unset GDAL_DATA
++++ [[ -n '' ]]
++++ unset GDAL_DRIVER_PATH
++++ [[ -n '' ]]
++++ unset CPL_ZIP_ENCODING
+++ PS1='(igs) '
+++ export PATH=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin
+++ PATH=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/bin:/gpfslocalsup/pub/anaconda-py3/2021.05/condabin:/gpfslocalsup/spack_soft/environment-modules/4.3.1/gcc-4.8.5-ism7cdy4xverxywj27jvjstqwk5oxe2v/bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/c3/bin:/usr/lpp/mmfs/bin:/sbin:/bin:/gpfslocalsys/slurm/current/bin:/gpfslocalsup/bin:/gpfslocalsys/bin
+++ export CONDA_PREFIX=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
+++ CONDA_PREFIX=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=igs
+++ CONDA_DEFAULT_ENV=igs
+++ export 'CONDA_PROMPT_MODIFIER=(igs) '
+++ CONDA_PROMPT_MODIFIER='(igs) '
+++ export CONDA_PREFIX_3=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4
+++ CONDA_PREFIX_3=/gpfslocalsup/pub/anaconda-py3/2021.05/envs/python-3.10.4
+++ export CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
+++ CONDA_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
+++ CONDA_PYTHON_EXE=/gpfslocalsup/pub/anaconda-py3/2021.05/bin/python
+++ . /linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/conda/activate.d/libxml2_activate.sh
++++ test -n ''
++++ xml_catalog_files_libxml2=
++++ XML_CATALOG_FILES=
++++ conda_catalog_files=
++++ ifs_libxml2=' 	
+'
++++ IFS=' '
++++ rem=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
++++ for pre in ${rem}
++++ test '' = /linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
++++ conda_catalog_files=/linkhome/rech/genlia01/ufr78cg/.conda/envs/igs
++++ rem=
++++ IFS=' 	
+'
++++ conda_catalog_files='file:///linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/xml/catalog file:///etc/xml/catalog'
++++ export 'XML_CATALOG_FILES=file:///linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/xml/catalog file:///etc/xml/catalog'
++++ XML_CATALOG_FILES='file:///linkhome/rech/genlia01/ufr78cg/.conda/envs/igs/etc/xml/catalog file:///etc/xml/catalog'
++++ unset conda_catalog_files ifs_libxml2 rem
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ wandb offline
++ cd /gpfswork/rech/xyk/ufr78cg/prioritized_sampling_and_gradient_steps/src
++ python main_continuous.py --total-timesteps 5000000 --log-results --trainer parallel_ppo_1d_continuous --env-name hopper --alpha 0.4
+An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
+wandb: Tracking run with wandb version 0.16.6
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: WARNING No relevant files were detected in the specified directory. No code will be logged to your run.
+wandb: 
+wandb: Run summary:
+wandb:      n_episodes 244
+wandb: total_timesteps 5M
+wandb:         trainer parallel_ppo_1d_cont...
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync ./wandb/offline-run-20240507_190353-ssws65fi
+wandb: Find logs at: ./wandb/offline-run-20240507_190353-ssws65fi/logs
