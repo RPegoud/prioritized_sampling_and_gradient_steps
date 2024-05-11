@@ -1,3 +1,0 @@
-W&B offline. Running your script from this directory will only write metadata locally. Use wandb disabled to completely turn off W&B.
-Running parallel_ppo_1a_continuous on hopper for 5000000 steps
-Finished training in 09:56:12
