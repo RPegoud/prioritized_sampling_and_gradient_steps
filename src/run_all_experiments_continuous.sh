@@ -8,8 +8,8 @@ fi
 env=$1
 
 trainers=(
-    # "base_ppo_continuous"
-    "parallel_ppo_1_continuous"
+     "base_ppo_continuous"
+     "parallel_ppo_1_continuous"
     # "parallel_ppo_1a_continuous"
     # "parallel_ppo_1b_continuous"
     # "parallel_ppo_1c_continuous"
@@ -31,9 +31,9 @@ function create_and_submit {
 #SBATCH --constraint=v100-16g
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=10
-#SBATCH --time=04:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=32
+#SBATCH --time=24:00:00
 #SBATCH --qos=qos_gpu-t3
 #SBATCH --hint=nomultithread
 #SBATCH --account=xyk@v100

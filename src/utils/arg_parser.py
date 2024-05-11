@@ -88,9 +88,9 @@ class PPO_Continuous_Args:
     """optimizer learning rate"""
     n_agents: int = 16
     """the number of parallel agents to train"""
-    num_envs: int = 2048
+    num_envs: int = 4
     """the number of parallel environments to collect transitions from"""
-    num_steps: int = 10
+    num_steps: int = 128
     """the number of environment steps taken between gradient steps"""
     update_epochs: int = 4
     """the number of update steps in a single epoch"""
