@@ -9,6 +9,7 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import LogWrapper
+
 from utils import (
     BraxGymnaxWrapper,
     ClipAction,
@@ -428,7 +429,9 @@ def parallel_ppo_1_continuous(args):
                         """Divides the per-sample gradients by the norm ratio."""
 
                         def _single_sample_broadcast(idx):
-                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+                            return jax.tree_map(
+                                lambda g: g[idx] / (weights[idx] + 1e-8), grads
+                            )
 
                         per_sample_grads = jax.vmap(_single_sample_broadcast)(
                             jnp.arange(args.num_steps * args.num_minibatches)
@@ -691,7 +694,10 @@ def parallel_ppo_1a_continuous(args):
                         """Divides the per-sample gradients by the norm ratio."""
 
                         def _single_sample_broadcast(idx):
-                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+                            return jax.tree_map(
+                                lambda g: g[idx] / (weights[idx] + 1e-8),
+                                grads,
+                            )
 
                         per_sample_grads = jax.vmap(_single_sample_broadcast)(
                             jnp.arange(args.num_steps * args.num_minibatches)
@@ -955,7 +961,9 @@ def parallel_ppo_1b_continuous(args):
                         """Divides the per-sample gradients by the norm ratio."""
 
                         def _single_sample_broadcast(idx):
-                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+                            return jax.tree_map(
+                                lambda g: g[idx] / (weights[idx] + 1e-8), grads
+                            )
 
                         per_sample_grads = jax.vmap(_single_sample_broadcast)(
                             jnp.arange(args.num_steps * args.num_minibatches)
@@ -1219,7 +1227,9 @@ def parallel_ppo_1c_continuous(args):
                         """Divides the per-sample gradients by the norm ratio."""
 
                         def _single_sample_broadcast(idx):
-                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+                            return jax.tree_map(
+                                lambda g: g[idx] / (weights[idx] + 1e-8), grads
+                            )
 
                         per_sample_grads = jax.vmap(_single_sample_broadcast)(
                             jnp.arange(args.num_steps * args.num_minibatches)
@@ -1485,7 +1495,9 @@ def parallel_ppo_1d_continuous(args):
                         """Divides the per-sample gradients by the norm ratio."""
 
                         def _single_sample_broadcast(idx):
-                            return jax.tree_map(lambda g: g[idx] / weights[idx], grads)
+                            return jax.tree_map(
+                                lambda g: g[idx] / (weights[idx] + 1e-8), grads
+                            )
 
                         per_sample_grads = jax.vmap(_single_sample_broadcast)(
                             jnp.arange(args.num_steps * args.num_minibatches)
