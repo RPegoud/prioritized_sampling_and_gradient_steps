@@ -9,7 +9,6 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from gymnax.wrappers.purerl import LogWrapper
-
 from utils import (
     BraxGymnaxWrapper,
     ClipAction,
@@ -955,7 +954,7 @@ def parallel_ppo_1b_continuous(args):
                             grads,
                             jnp.arange(args.num_steps * args.num_minibatches),
                         )
-                        return sample_norms / sample_norms.sum()
+                        return sample_norms / (sample_norms.sum() + 1e-8)
 
                     def get_weighted_grads(grads, weights):
                         """Divides the per-sample gradients by the norm ratio."""
@@ -1489,7 +1488,7 @@ def parallel_ppo_1d_continuous(args):
                             grads,
                             jnp.arange(args.num_steps * args.num_minibatches),
                         )
-                        return sample_norms / sample_norms.sum()
+                        return sample_norms / (sample_norms.sum() + 1e-8)
 
                     def get_weighted_grads(grads, weights):
                         """Divides the per-sample gradients by the norm ratio."""
