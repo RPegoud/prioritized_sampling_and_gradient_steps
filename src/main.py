@@ -9,7 +9,6 @@ import plotly
 import plotly.graph_objects as go
 import tyro
 import wandb
-
 from algs import (
     base_ppo,
     parallel_ppo_1,
@@ -132,7 +131,7 @@ if __name__ == "__main__":
             ]
         )
         fig.update_layout(
-            title=f"Returns over {n_episodes} episodes, averaged across {args.n_agents} agents, {args.trainer} - {args.env_name}",  # noqa: E501
+            title=f"Returns over {n_episodes} episodes, averaged across {args.n_agents} agents, {args.trainer}_{args.alpha} - {args.env_name}",  # noqa: E501
             xaxis_title="Episodes",
             yaxis_title="Average return per episode",
             showlegend=False,
