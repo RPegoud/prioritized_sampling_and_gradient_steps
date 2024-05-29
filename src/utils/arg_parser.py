@@ -82,6 +82,8 @@ class PPO_Continuous_Args:
     """the training algorithm to use"""
     env_name: str = "hopper"
     """environment to run"""
+    backend: str = "positional"
+    """backend of the environement"""
     total_timesteps: int = 5e5
     """total number of timesteps"""
     learning_rate: float = 3e-4

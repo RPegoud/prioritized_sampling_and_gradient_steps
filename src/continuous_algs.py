@@ -63,7 +63,7 @@ def base_ppo_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
@@ -281,7 +281,7 @@ def parallel_ppo_1_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
@@ -522,7 +522,7 @@ def parallel_ppo_1a_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
@@ -789,7 +789,7 @@ def parallel_ppo_1b_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
@@ -1055,7 +1055,7 @@ def parallel_ppo_1c_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
@@ -1323,7 +1323,7 @@ def parallel_ppo_1d_continuous(args):
     MINIBATCH_SIZE = args.num_envs * args.num_steps // args.num_minibatches
 
     env, env_params = (
-        BraxGymnaxWrapper(args.env_name),
+        BraxGymnaxWrapper(args.env_name, backend=args.backend),
         None,
     )
     env = LogWrapper(env)
